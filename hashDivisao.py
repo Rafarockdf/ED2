@@ -44,11 +44,8 @@ class TabelaHash:
         return tabela
     # Continuar implementação
     def inserirTabela(tabela,elemento):
+        x=0
         modIndice = [ord(caractere) for caractere in elemento]
-            
-            
-    
-
-
-
-
+        for i in modIndice:
+            x += i
+        return x % 13
