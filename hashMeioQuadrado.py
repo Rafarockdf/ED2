@@ -1,5 +1,5 @@
 import random
-# 2 * 50 = 100 Tamanho da tabela será 97 porque é o número primo mais próximo de 100
+# 2 ** 10 = 20 Tamanho da tabela será 19 porque é o número primo mais próximo de 10
 _tamanho=103
 class no:
     def __init__(self,chave):
@@ -23,7 +23,7 @@ class ListaEncadeada:
 
 # Calasse Tabela Hash
 class TabelaHash:
-    
+    _tamanho=103
     
     def __init__(self): # Metodo que instancia a classe
         self.indice = None
@@ -31,7 +31,7 @@ class TabelaHash:
         self.proximo = ListaEncadeada()
     
     def criarTabela(self,tamanho):
-        tabela = []
+        tabela = []  
         for i in range(tamanho):
             tabela.append(TabelaHash())
         return tabela
@@ -43,14 +43,26 @@ class TabelaHash:
             tabela[i].valor = None
             tabela[i].proximo = ListaEncadeada()
         return tabela
-    # Continuar implementação
-    def inserirTabela(self,tabela,elemento):
-        modIndice = sum(ord(caractere) for caractere in elemento) % _tamanho
-        if tabela[modIndice].valor == None:
+    
+    
+    
+    
+    def funcao_meio_quadrado(self, chave):
+        # Calcula o quadrado da chave e extrai o meio
+        chave = int(''.join(str(ord(c)) for c in chave))  # Converte a chave para um número
+        quadrado = chave ** 2
+        quadrado_str = str(quadrado)
+        meio = len(quadrado_str) // 2
+        meio_quadrado = quadrado_str[meio - 2:meio + 2]  # Extrai 4 dígitos centrais
+        return int(meio_quadrado) % _tamanho
+
+    def inserirTabela(self, tabela, elemento):
+        modIndice = self.funcao_meio_quadrado(elemento)
+        if tabela[modIndice].valor is None:
             tabela[modIndice].valor = elemento
         else:
             tabela[modIndice].proximo.inserir(elemento)
-            
+    
         
 with open('cidades.txt', 'r') as arquivo:
 
@@ -79,7 +91,7 @@ for i in range(_tamanho):
         while no_atual:
             print(f"    Colisão -> {no_atual.chave}")
             no_atual = no_atual.proximo
-            colisoes+=1
+            colisoes += 1
 
 print(f'A tabela Hash teve {colisoes} colisões')
         
