@@ -1,6 +1,6 @@
 import random
 # 2 * 50 = 100 Tamanho da tabela será 97 porque é o número primo mais próximo de 100
-_tamanho=103
+_tamanho=1709
 class no:
     def __init__(self,chave):
         self.chave=chave
@@ -52,14 +52,14 @@ class TabelaHash:
             tabela[modIndice].proximo.inserir(elemento)
             
         
-with open('cidades.txt', 'r') as arquivo:
+with open(r'cidades.txt', 'r') as arquivo:
 
     linhas = arquivo.readlines()
     
-linhas_aleatorias = random.sample(linhas, 50)
+#linhas_aleatorias = random.sample(linhas, 50)
     
 lista_cidades = []
-for linha in linhas_aleatorias:
+for linha in linhas:
     lista_cidades.append(linha.strip())    
     
 tabela_hash = TabelaHash()
