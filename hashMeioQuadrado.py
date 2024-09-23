@@ -1,6 +1,7 @@
 import random
-# 2 ** 10 = 20 Tamanho da tabela será 19 porque é o número primo mais próximo de 10
-_tamanho=103
+from time import time
+# 2 * 853 = 1703 Tamanho da tabela será 1709 porque é o número primo mais próximo de 1703
+_tamanho=1709
 class no:
     def __init__(self,chave):
         self.chave=chave
@@ -43,10 +44,7 @@ class TabelaHash:
             tabela[i].valor = None
             tabela[i].proximo = ListaEncadeada()
         return tabela
-    
-    
-    
-    
+
     def funcao_meio_quadrado(self, chave):
         # Calcula o quadrado da chave e extrai o meio
         chave = int(''.join(str(ord(c)) for c in chave))  # Converte a chave para um número
@@ -66,20 +64,18 @@ class TabelaHash:
         
 with open('cidades.txt', 'r') as arquivo:
 
-    linhas = arquivo.readlines()
+    lista_cidades = arquivo.readlines()
     
-linhas_aleatorias = random.sample(linhas, 50)
-    
-lista_cidades = []
-for linha in linhas_aleatorias:
-    lista_cidades.append(linha.strip())    
+
+      
     
 tabela_hash = TabelaHash()
 tabela = tabela_hash.inicializaTabela(_tamanho)
 
-
+inicio = time()
 for cidade in lista_cidades:
     tabela_hash.inserirTabela(tabela,cidade)
+fim = time()
 colisoes = 0  
  
 # Verificar a tabela
@@ -94,4 +90,5 @@ for i in range(_tamanho):
             colisoes += 1
 
 print(f'A tabela Hash teve {colisoes} colisões')
-        
+
+print(f'Tempo de execução: {fim - inicio}segundos \n')       

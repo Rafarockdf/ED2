@@ -1,6 +1,6 @@
 import random
-# 2 * 50 = 100 Tamanho da tabela será 97 porque é o número primo mais próximo de 100
-_tamanho=1709
+from time import time
+# 2 * 853 = 1703 Tamanho da tabela será 1709 porque é o número primo mais próximo de 1703_tamanho=1709
 class no:
     def __init__(self,chave):
         self.chave=chave
@@ -45,7 +45,7 @@ class TabelaHash:
         return tabela
     # Continuar implementação
     def inserirTabela(self,tabela,elemento):
-        modIndice = sum(ord(caractere) for caractere in elemento) % _tamanho
+        modIndice = int(''.join(str(ord(c)) for c in elemento)) % _tamanho
         if tabela[modIndice].valor == None:
             tabela[modIndice].valor = elemento
         else:
@@ -54,20 +54,16 @@ class TabelaHash:
         
 with open(r'cidades.txt', 'r') as arquivo:
 
-    linhas = arquivo.readlines()
-    
-#linhas_aleatorias = random.sample(linhas, 50)
-    
-lista_cidades = []
-for linha in linhas:
-    lista_cidades.append(linha.strip())    
+    lista_cidades = arquivo.readlines()
     
 tabela_hash = TabelaHash()
 tabela = tabela_hash.inicializaTabela(_tamanho)
 
-
+inicio = time()
 for cidade in lista_cidades:
     tabela_hash.inserirTabela(tabela,cidade)
+fim = time()
+
 colisoes = 0  
  
 # Verificar a tabela
@@ -82,4 +78,5 @@ for i in range(_tamanho):
             colisoes+=1
 
 print(f'A tabela Hash teve {colisoes} colisões')
-        
+    
+print(f'Tempo de execução: {fim - inicio}segundos \n')   
