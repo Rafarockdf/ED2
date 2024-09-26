@@ -29,6 +29,7 @@ class TabelaHash:
     def __init__(self): # Metodo que instancia a classe
         self.indice = None
         self.valor = None
+        self.tamanhoLista = 0 
         self.proximo = ListaEncadeada()
     
     def criarTabela(self,tamanho):
@@ -43,6 +44,7 @@ class TabelaHash:
             tabela[i].indice = i
             tabela[i].valor = None
             tabela[i].proximo = ListaEncadeada()
+            self.tamanhoLista = 0
         return tabela
 
     def funcao_meio_quadrado(self, chave):
@@ -60,9 +62,10 @@ class TabelaHash:
             tabela[modIndice].valor = elemento
         else:
             tabela[modIndice].proximo.inserir(elemento)
+            tabela[modIndice].tamanhoLista +=1
     
         
-with open('cidades.txt', 'r') as arquivo:
+with open(r'C:\Users\rafam\Desktop\ED2\ED2\cidades.txt', 'r') as arquivo:
 
     lista_cidades = arquivo.readlines()
     
@@ -77,7 +80,7 @@ for cidade in lista_cidades:
     tabela_hash.inserirTabela(tabela,cidade)
 fim = time()
 colisoes = 0  
- 
+maior = 0
 # Verificar a tabela
 for i in range(_tamanho):
     
@@ -88,7 +91,11 @@ for i in range(_tamanho):
             print(f"    Colisão -> {no_atual.chave}")
             no_atual = no_atual.proximo
             colisoes += 1
+for i in range(_tamanho):
+    if tabela[i].tamanhoLista > maior:
+        maior = tabela[i].tamanhoLista
 
+print(f'A maior lista é {maior}')
 print(f'A tabela Hash teve {colisoes} colisões')
 
 print(f'Tempo de execução: {fim - inicio}segundos \n')       
