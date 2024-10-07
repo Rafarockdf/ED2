@@ -1,6 +1,7 @@
 import random
 from time import time
-# 2 * 853 = 1703 Tamanho da tabela será 1709 porque é o número primo mais próximo de 1703_tamanho=1709
+# 2 * 853 = 1703 Tamanho da tabela será 1709 porque é o número primo mais próximo de 1703
+_tamanho=1709
 class no:
     def __init__(self,chave):
         self.chave=chave
