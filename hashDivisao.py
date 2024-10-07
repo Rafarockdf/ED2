@@ -68,7 +68,7 @@ for cidade in lista_cidades:
 fim = time()
 
 colisoes = 0  
- 
+maior = 0
 # Verificar a tabela
 for i in range(_tamanho):
     
