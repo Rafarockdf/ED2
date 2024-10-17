@@ -1,10 +1,6 @@
 import random
 from time import time
-<<<<<<< HEAD
 # 2 * 853 = 1703 Tamanho da tabela será 1709 porque é o número primo mais próximo de 1703
-=======
-# 2 * 853 = 1703 Tamanho da tabela será 1709 porque é o número primo mais próximo de 1703_tamanho=1709
->>>>>>> 1b51d78bf3e6d3946597c853e33c56438887bdb4
 _tamanho=1709
 class no:
     def __init__(self,chave):
@@ -26,6 +22,12 @@ class ListaEncadeada:
             self.inicio.anterior = novo  
             self.inicio = novo  
 
+
+
+lista = [1,4,5,6,7,8,9]
+         
+
+
 # Calasse Tabela Hash
 class TabelaHash:
     
@@ -33,7 +35,6 @@ class TabelaHash:
     def __init__(self): # Metodo que instancia a classe
         self.indice = None
         self.valor = None
-        self.tamanhoLista = 0
         self.proximo = ListaEncadeada()
     
     def criarTabela(self,tamanho):
@@ -47,7 +48,6 @@ class TabelaHash:
         for i in range(tamanho):
             tabela[i].indice = i
             tabela[i].valor = None
-            self.tamanhoLista = 0
             tabela[i].proximo = ListaEncadeada()
         return tabela
     # Continuar implementação
@@ -57,9 +57,9 @@ class TabelaHash:
             tabela[modIndice].valor = elemento
         else:
             tabela[modIndice].proximo.inserir(elemento)
-            tabela[modIndice].tamanhoLista+=1
+            
         
-with open(r'C:\Users\rafam\Desktop\ED2\ED2\cidades.txt', 'r') as arquivo:
+with open(r'cidades.txt', 'r') as arquivo:
 
     lista_cidades = arquivo.readlines()
     
@@ -72,7 +72,7 @@ for cidade in lista_cidades:
 fim = time()
 
 colisoes = 0  
-maior = 0
+ 
 # Verificar a tabela
 for i in range(_tamanho):
     
@@ -83,11 +83,7 @@ for i in range(_tamanho):
             print(f"    Colisão -> {no_atual.chave}")
             no_atual = no_atual.proximo
             colisoes+=1
-for i in range(_tamanho):
-    if tabela[i].tamanhoLista > maior:
-        maior = tabela[i].tamanhoLista
 
-print(f'A maior lista é {maior}')
 print(f'A tabela Hash teve {colisoes} colisões')
     
 print(f'Tempo de execução: {fim - inicio}segundos \n')   

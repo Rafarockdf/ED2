@@ -1,115 +1,143 @@
-from collections import deque
-
-class no:
-    def __init__(self,chave):
-        self.chave=chave
-        self.proximo = None
-        self.anterior = None
-        
-class ListaEncadeada:
-    def __init__(self):
-        self.inicio = None
-        
-    def inserir(self,valor):
-        novo = no(valor)
-        if self.inicio == None:
-            self.inicio = novo
-            novo.anterior = self.inicio
-        else:
-            novo.proximo = self.inicio  
-            self.inicio.anterior = novo  
-            self.inicio = novo
-            
-            
-class Grafo:
-    def __init__(self, vertices):
-        self.vertices = vertices
-        self.visitado = []
-        self.grafo = [[] for _ in range(self.vertices)]
-        
-    def adiciona_aresta(self, u, v):
-        self.grafo[u-1].append(v)
-        self.grafo[v-1].append(u)
-        
-    def mostra_lista(self):
-        for i in range(self.vertices):
-            print(f'{i+1}:', end='  ')
-            for j in self.grafo[i]:
-                print(f' -> {j}', end='  ')
-            print('')
-         
-    def buscaDFS(self):
-        self.visitado = ['N' for _ in range(self.vertices)]
-        
-        for i in range(self.vertices):  # Itera sobre os vértices
-            if self.visitado[i] == 'N':
-                print(f'Iniciando DFS a partir do vértice {i+1}')
-                self.buscaDFSProf(i)
-                
-    def buscaDFSProf(self, posicao):
-        self.visitado[posicao] = 'S'
-        print(f'Visitando vértice {posicao+1}')
-        
-        for i in self.grafo[posicao]:
-            if self.visitado[i-1] == 'N':  # Corrige índice (i-1) para acessar corretamente
-                self.buscaDFSProf(i-1)
-# Exemplo de uso
-    def buscaBFS(self, vertice_inicial):
-        # Iniciando a lista de vértices visitados
-        self.visitado = ['N' for _ in range(self.vertices)]
-        
-        # Inicializando a fila (queue) e marcando o vértice inicial como visitado
-        fila = deque([vertice_inicial])
-        self.visitado[vertice_inicial - 1] = 'S'
-        print(f'Iniciando BFS a partir do vértice {vertice_inicial}')
-        
-        while fila:
-            # Remove o vértice da fila (usamos o termo "desenfileirar")
-            vertice_atual = fila.popleft()
-            print(f'Visitando vértice {vertice_atual}')
-            
-            # Explorar os vértices adjacentes
-            for vizinho in self.grafo[vertice_atual - 1]:
-                if self.visitado[vizinho - 1] == 'N':
-                    fila.append(vizinho)
-                    self.visitado[vizinho - 1] = 'S'
-                    print(f'Colocando vértice {vizinho} na fila')  
-            
-g = Grafo(12)
-# 1
-g.adiciona_aresta(1,2)
-g.adiciona_aresta(1,4)
-g.adiciona_aresta(1,5)
-# 2
-g.adiciona_aresta(2,5)
-g.adiciona_aresta(2,7)
-g.adiciona_aresta(2,3)
-g.adiciona_aresta(2,9)
-# 3
-g.adiciona_aresta(3,12)
-g.adiciona_aresta(3,6)
-g.adiciona_aresta(3,10)
-# 4
-g.adiciona_aresta(4,5)
-g.adiciona_aresta(4,7)
-# 5
-g.adiciona_aresta(5,8)
-g.adiciona_aresta(5,6)
-# 6
-g.adiciona_aresta(6,9)
-g.adiciona_aresta(6,11)
-# 7
-g.adiciona_aresta(7,8)
-# 8
-g.adiciona_aresta(8,9)
-# 9
-g.adiciona_aresta(9,12)
-g.adiciona_aresta(9,10)
-# 10
-g.adiciona_aresta(10,11)
-# 11
-g.adiciona_aresta(11,12)
+class Edge:
+    def __init__(self, v):
+        self.v = v
+        self.n = None
 
 
+class Graph:
+    def __init__(self, V):
+        self.V = V
+        self.adj = [None] * V
+        self.match = [-1] * V
+        self.base = list(range(V))
+        self.pai = [-1] * V
+        self.inQ = [False] * V
+        self.inB = [False] * V
+        self.q = []
+    
+    def add_edge(self, u, v):
+        edge_u = Edge(v)
+        edge_u.n = self.adj[u]
+        self.adj[u] = edge_u
 
-g.buscaDFS()
+        edge_v = Edge(u)
+        edge_v.n = self.adj[v]
+        self.adj[v] = edge_v
+
+    def LCA(self, root, u, v):
+        inP = [False] * self.V
+        while True:
+            u = self.base[u]
+            inP[u] = True
+            if u == root:
+                break
+            u = self.pai[self.match[u]]
+
+        while True:
+            v = self.base[v]
+            if inP[v]:
+                return v
+            else:
+                v = self.pai[self.match[v]]
+
+    def marca_blossom(self, lca, u):
+        while self.base[u] != lca:
+            v = self.match[u]
+            self.inB[self.base[u]] = self.inB[self.base[v]] = True
+            u = self.pai[v]
+            if self.base[u] != lca:
+                self.pai[u] = v
+
+    def contrai_blossom(self, s, u, v):
+        lca = self.LCA(s, u, v)
+        self.inB = [False] * self.V
+        self.marca_blossom(lca, u)
+        self.marca_blossom(lca, v)
+
+        if self.base[u] != lca:
+            self.pai[u] = v
+        if self.base[v] != lca:
+            self.pai[v] = u
+
+        for i in range(self.V):
+            if self.inB[self.base[i]]:
+                self.base[i] = lca
+                if not self.inQ[i]:
+                    self.q.append(i)
+                    self.inQ[i] = True
+
+    def acha_caminho_aumento(self, s):
+        self.inQ = [False] * self.V
+        self.pai = [-1] * self.V
+
+        for i in range(self.V):
+            self.base[i] = i
+        self.q = [s]
+        self.inQ[s] = True
+
+        qh = 0
+        qt = 1
+
+        while qh < qt:
+            u = self.q[qh]
+            qh += 1
+
+            for edge in self.iter_edges(u):
+                v = edge.v
+                if self.base[u] != self.base[v] and self.match[u] != v:
+                    if (v == s) or (self.match[v] != -1 and self.pai[self.match[v]] != -1):
+                        self.contrai_blossom(s, u, v)
+                    elif self.pai[v] == -1:
+                        self.pai[v] = u
+                        if self.match[v] == -1:
+                            return v
+                        elif not self.inQ[self.match[v]]:
+                            self.q.append(self.match[v])
+                            self.inQ[self.match[v]] = True
+
+        return -1
+
+    def aumenta_emparelhamento(self, s, t):
+        u = t
+        while u != -1:
+            v = self.pai[u]
+            w = self.match[v]
+            self.match[v] = u
+            self.match[u] = v
+            u = w
+        return t != -1
+
+    def edmonds_blossom(self):
+        match_new = 0
+        for u in range(self.V):
+            if self.match[u] == -1:
+                match_new += self.aumenta_emparelhamento(u, self.acha_caminho_aumento(u))
+        return match_new
+
+    def iter_edges(self, u):
+        edge = self.adj[u]
+        while edge:
+            yield edge
+            edge = edge.n
+
+
+def main():
+    V, E = map(int, input("Digite o número de vértices e arestas: ").split())
+    graph = Graph(V)
+
+    for _ in range(E):
+        u, v = map(int, input("Digite a aresta (u v): ").split())
+        u -= 1
+        v -= 1
+        graph.add_edge(u, v)
+
+    match_size = graph.edmonds_blossom()
+    print(f"O tamanho do emparelhamento máximo = {match_size}")
+
+    for v in range(V):
+        if v < graph.match[v]:
+            print(f"{v+1} está emparelhado com {graph.match[v]+1}")
+
+
+if __name__ == "__main__":
+    main()
