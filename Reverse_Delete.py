@@ -3,19 +3,37 @@ class Grafo:
     def __init__(self, vertices):
         self.vertices = vertices
         self.visitado = []
-        self.grafo = [[] for _ in range(self.vertices)]
+        self.grafo = [{} for _ in range(self.vertices)]
         
-    def adiciona_aresta(self, u, v):
-        self.grafo[u-1].append(v)
-        self.grafo[v-1].append(u)
+    def adiciona_aresta(self, u, v,peso):
+        self.grafo[u - 1][v] = peso
+        self.grafo[v - 1][u] = peso
+        
+    def remove_aresta(self, u, v, peso):
+        pass
         
     def mostra_lista(self):
         for i in range(self.vertices):
             print(f'{i+1}:', end='  ')
             for j in self.grafo[i]:
-                print(f' -> {j}', end='  ')
+                print(f'-> {j} peso {self.grafo[i][j]}', end=' ')
             print('')
-         
+            
+    def ordena_arestas_maior(self):
+        for i in range(self.vertices):
+            # Ordena o dicionário `self.grafo[i]` pelos valores dos pesos
+            elementos_ordenados = sorted(self.grafo[i].items(), key=lambda item: item[1], reverse=True)  # item[1] refere-se ao peso
+            # Converte a lista ordenada de tuplas de volta para um dicionário
+            self.grafo[i] = dict(elementos_ordenados)
+            
+    def reverse_delete(self):
+        maiorAresta = 0
+        for i in range(self.vertices):
+            for j in self.grafo[i]:
+                if self.grafo[i][j] > maiorAresta:
+                    maiorAresta  = self.grafo[i][j]
+                    
+                
     def buscaDFS(self):
         self.visitado = ['N' for _ in range(self.vertices)]
         
@@ -52,42 +70,26 @@ class Grafo:
                     fila.append(vizinho)
                     self.visitado[vizinho - 1] = 'S'
                     print(f'Colocando vértice {vizinho} na fila')  
-            
-g = Grafo(12)
+
+
+g = Grafo(6)
 # 1
-g.adiciona_aresta(1,2)
-g.adiciona_aresta(1,4)
-g.adiciona_aresta(1,5)
-# 2
-g.adiciona_aresta(2,5)
-g.adiciona_aresta(2,7)
-g.adiciona_aresta(2,3)
-g.adiciona_aresta(2,9)
-# 3
-g.adiciona_aresta(3,12)
-g.adiciona_aresta(3,6)
-g.adiciona_aresta(3,10)
-# 4
-g.adiciona_aresta(4,5)
-g.adiciona_aresta(4,7)
-# 5
-g.adiciona_aresta(5,8)
-g.adiciona_aresta(5,6)
-# 6
-g.adiciona_aresta(6,9)
-g.adiciona_aresta(6,11)
-# 7
-g.adiciona_aresta(7,8)
-# 8
-g.adiciona_aresta(8,9)
-# 9
-g.adiciona_aresta(9,12)
-g.adiciona_aresta(9,10)
-# 10
-g.adiciona_aresta(10,11)
-# 11
-g.adiciona_aresta(11,12)
+g.adiciona_aresta(1,2,5)
+g.adiciona_aresta(1,3,6)
+g.adiciona_aresta(1,4,4)
+#2
+g.adiciona_aresta(2,3,1)
+g.adiciona_aresta(2,4,2)
+#3
+g.adiciona_aresta(3,4,2)
+g.adiciona_aresta(3,5,5)
+g.adiciona_aresta(3,6,3)
+#4
+g.adiciona_aresta(4,6,4)
+#5
+g.adiciona_aresta(5,6,4)
 
+g.ordena_arestas_maior()
+g.mostra_lista()        
 
-
-g.mostra_lista()
+g.reverse_delete()
