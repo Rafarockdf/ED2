@@ -9,8 +9,11 @@ class Grafo:
         self.grafo[u - 1][v] = peso
         self.grafo[v - 1][u] = peso
         
-    def remove_aresta(self, u, v, peso):
-        pass
+    def remove_aresta(self, u, v):
+        peso = self.grafo[u - 1][v]
+        self.grafo[u - 1].pop(v)
+        self.grafo[v - 1].pop(u)
+        return [u,v,peso]
         
     def mostra_lista(self):
         for i in range(self.vertices):
@@ -29,11 +32,17 @@ class Grafo:
     def reverse_delete(self):
         maiorAresta = 0
         for i in range(self.vertices):
-            for j in self.grafo[i]:
+            arestas = list(self.grafo[i].items())
+            for j,peso in arestas:
                 if self.grafo[i][j] > maiorAresta:
                     maiorAresta  = self.grafo[i][j]
-                    
-                
+                    aresta = self.remove_aresta(i+1,j)
+                    print(f'Removendo aresta{aresta}')
+                    if self.buscaBFS(1) != True:
+                        self.adiciona_aresta(aresta[0],aresta[1],aresta[2])
+                    else:
+                        continue
+        
     def buscaDFS(self):
         self.visitado = ['N' for _ in range(self.vertices)]
         
@@ -70,7 +79,7 @@ class Grafo:
                     fila.append(vizinho)
                     self.visitado[vizinho - 1] = 'S'
                     print(f'Colocando vértice {vizinho} na fila')  
-
+        return len(fila) == self.vertices
 
 g = Grafo(6)
 # 1
@@ -90,6 +99,10 @@ g.adiciona_aresta(4,6,4)
 g.adiciona_aresta(5,6,4)
 
 g.ordena_arestas_maior()
-g.mostra_lista()        
 
+g.mostra_lista()        
 g.reverse_delete()
+print("\n\n")
+g.mostra_lista()     
+
+
