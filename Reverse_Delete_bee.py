@@ -22,49 +22,41 @@ class Grafo:
             for j in self.grafo[i]:
                 print(f'-> {j} peso {self.grafo[i][j]}', end=' ')
             print('')
+
     def ordena_arestas_maior(self):
         for i in range(self.vertices):
-            # Ordena o dicionário `self.grafo[i]` pelos valores dos pesos
-            elementos_ordenados = sorted(self.grafo[i].items(), key=lambda item: item[1], reverse=True)  # item[1] refere-se ao peso
-            # Converte a lista ordenada de tuplas de volta para um dicionário
+            elementos_ordenados = sorted(self.grafo[i].items(), key=lambda item: item[1], reverse=True)
             self.grafo[i] = dict(elementos_ordenados)    
+
     def reverse_delete(self):
-        maiorAresta = 0
         soma = 0
         arestas_removidas = 0
         arestas_minimas = self.vertices - 1
         self.ordena_arestas_maior()
 
-        # Soma total inicial de todas as arestas
         for i in range(self.vertices):
             for j, peso in self.grafo[i].items():
                 soma += peso
-        soma = soma/2
-                
-        print(soma)
+        soma = int(soma / 2)
+
         for i in range(self.vertices):
             arestas = list(self.grafo[i].items())
             for j, peso in arestas:
-                if peso > maiorAresta:
-                    maiorAresta = peso  # Use o peso atual diretamente
-                    aresta = self.remove_aresta(i, j)
-                    print(f'Removendo aresta {aresta}')
-                    soma -= peso
-                    print(f'Soma após remoção: {soma}')
+                
+                aresta = self.remove_aresta(i, j)
+                soma -= peso
 
-                    if not self.buscaBFS(0):  # Começa a busca a partir do vértice 0
-                        self.adiciona_aresta(aresta[0], aresta[1], aresta[2])
-                        soma += peso  # Atualiza a soma após re-adicionar
-                        print(f'Soma após re-adicionar: {soma}')
-                    else:
-                        arestas_removidas += 1  
+                if not self.buscaBFS(0): 
+                    self.adiciona_aresta(aresta[0], aresta[1], aresta[2])
+                    soma += peso
+                else:
+                    arestas_removidas += 1  
 
-                    if arestas_removidas >= arestas_minimas:
-                        print("Conectividade mínima alcançada. Encerrando o algoritmo.")
-                        return soma
+                if arestas_removidas >= arestas_minimas:
+                    
+                    return soma
 
-        return soma  # Retorna a soma das arestas restantes
-
+        return soma  
 
     def buscaBFS(self, vertice_inicial):
         self.visitado = ['N' for _ in range(self.vertices)]
@@ -79,8 +71,6 @@ class Grafo:
                     self.visitado[vizinho] = 'S'
         return all(status == 'S' for status in self.visitado)
 
-
-
 # Leitura de entrada
 while True:
     m, n = map(int, input().split())
@@ -91,10 +81,5 @@ while True:
     for _ in range(n):
        u, v, peso = map(int, input().split())
        g.adiciona_aresta(u, v, peso)
-    g.mostra_lista()
-    print("\n\n")
     soma = g.reverse_delete()
-    print("\n\n")
-    print("Soma final:", soma)
-    print("\n\n")
-    g.mostra_lista()
+    print(soma)
